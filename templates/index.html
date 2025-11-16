@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Leave Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="center-page">
+<div class="card">
+    <h1>Student Leave Application Portal</h1>
+    <p class="subtitle">
+        Students can apply leave online, Class Advisor approves or rejects, HOD can view applications.
+    </p>
+    <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+        <a href="{{ url_for('login') }}" class="btn primary">Login</a>
+        <a href="{{ url_for('register') }}" class="btn outline">Student Register</a>
+    </div>
+</div>
+</body>
+</html>

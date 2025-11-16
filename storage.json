@@ -1,0 +1,13 @@
+{
+    "leaves": [
+        {
+            "student": "Harshini",
+            "from_date": "2025-11-17",
+            "to_date": "2025-11-18",
+            "subject": "due to function",
+            "reason": "fuction",
+            "advisor_status": "approved",
+            "hod_status": "pending"
+        }
+    ]
+}

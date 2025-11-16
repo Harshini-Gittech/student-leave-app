@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div>Student: {{ user.name }} ({{ user.class_name }} / {{ user.roll_no }})</div>
+    <nav>
+        <a href="{{ url_for('apply_leave') }}" class="btn small">Apply Leave</a>
+        <a href="{{ url_for('logout') }}" class="btn small outline">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <section class="card">
+        <h2>Attendance Tracker</h2>
+        {% if attendance %}
+            {% set used = attendance.leave_days %}
+            {% set total = attendance.total_days %}
+            {% set percent = (used / total * 100) | round(2) %}
+            <p>Total working days: <strong>{{ total }}</strong></p>
+            <p>Leave days used: <strong>{{ used }}</strong></p>
+            <p>Leave percentage: <strong>{{ percent }}%</strong> (limit: 25%)</p>
+        {% else %}
+            <p>No attendance record found.</p>
+        {% endif %}
+    </section>
+
+    <section class="card">
+        <h2>Your Leave Applications</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Applied At</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave.id }}</td>
+                    <td>{{ leave.from_datetime }}</td>
+                    <td>{{ leave.to_datetime }}</td>
+                    <td>{{ leave.reason }}</td>
+                    <td class="status {{ leave.status }}">{{ leave.status|capitalize }}</td>
+                    <td>{{ leave.applied_at }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No leave applications yet.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

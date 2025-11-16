@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Advisor Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div>Class Advisor: {{ user.name }}</div>
+    <nav>
+        <a href="{{ url_for('logout') }}" class="btn small outline">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <section class="card">
+        <div class="card-header-row">
+            <h2>Leave Applications</h2>
+
+            <form method="GET" class="filter-form">
+                <label>Status</label>
+                <select name="status">
+                    <option value="all" {% if selected_status == 'all' %}selected{% endif %}>All</option>
+                    <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="approved" {% if selected_status == 'approved' %}selected{% endif %}>Approved</option>
+                    <option value="rejected" {% if selected_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+
+                <label>Class</label>
+                <select name="cls">
+                    <option value="all" {% if selected_class == 'all' %}selected{% endif %}>All</option>
+                    {% for c in classes %}
+                    <option value="{{ c.student_class }}"
+                        {% if selected_class == c.student_class %}selected{% endif %}>
+                        {{ c.student_class }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn small">Apply</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Roll</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Letter</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave.id }}</td>
+                    <td>{{ leave.student_name }}</td>
+                    <td>{{ leave.student_class }}</td>
+                    <td>{{ leave.student_roll }}</td>
+                    <td>{{ leave.from_datetime }}</td>
+                    <td>{{ leave.to_datetime }}</td>
+                    <td>{{ leave.reason }}</td>
+                    <td class="status {{ leave.status }}">{{ leave.status|capitalize }}</td>
+                    <td>
+                        {% if leave.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('update_leave') }}" class="inline-form">
+                            <input type="hidden" name="leave_id" value="{{ leave.id }}">
+                            <button type="submit" name="action" value="approve" class="btn tiny">Approve</button>
+                            <button type="submit" name="action" value="reject" class="btn tiny outline">Reject</button>
+                        </form>
+                        {% else %}
+                        {{ leave.status|capitalize }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('advisor_view_leave', leave_id=leave.id) }}"
+                           class="btn tiny outline">
+                            View Letter
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">No leave applications found for this filter.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

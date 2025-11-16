@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply Leave</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div>Apply Leave – Student Portal</div>
+    <nav>
+        <a href="{{ url_for('student_dashboard') }}" class="btn small">Back to Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn small outline">Logout</a>
+    </nav>
+</header>
+
+<main class="container grid-2">
+    <section class="card">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <h2>Leave Form</h2>
+
+        <form method="POST">
+            <label>Student Name</label>
+            <input
+                type="text"
+                name="student_name"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <label>Class</label>
+            <input type="text" name="student_class" value="{{ user.class_name }}" required>
+
+            <label>Roll No</label>
+            <input type="text" name="student_roll" value="{{ user.roll_no }}" required>
+
+            <label>Date</label>
+            <input
+                type="date"
+                name="letter_date"
+                value="{{ today_date.strftime('%Y-%m-%d') }}"
+                required
+            >
+
+            <label>From (Date & Time)</label>
+            <input type="datetime-local" name="from_datetime" required>
+
+            <label>To (Date & Time)</label>
+            <input type="datetime-local" name="to_datetime" required>
+
+            <label>Reason</label>
+            <textarea name="reason" rows="4" required></textarea>
+
+            <button type="submit" class="btn primary full">Submit Leave</button>
+        </form>
+
+        <p class="hint">
+            Note: You must apply at least 5 hours before start time.
+            Leave limit is 25% of total working days.
+        </p>
+    </section>
+
+    <section class="card">
+        <h2>Leave Application Format</h2>
+        {% if letter %}
+        <pre class="letter">
+From: {{ letter.name }}
+Class: {{ letter.class_name }}
+Roll No: {{ letter.roll_no }}
+Date: {{ letter.today }}
+
+To,
+The Class Advisor / HOD,
+_________________________
+(College/Department)
+
+Subject: Leave Application
+
+Respected Sir/Madam,
+
+I am writing to request leave from {{ letter.from_date }} to {{ letter.to_date }} due to {{ letter.reason }}.
+
+I kindly request you to grant me leave for the mentioned days.
+
+Thank you.
+
+Your obedient student,
+{{ letter.name }}
+Roll No: {{ letter.roll_no }}
+Class: {{ letter.class_name }}
+        </pre>
+        {% else %}
+        <p>After you submit, your formatted application letter will appear here.</p>
+        {% endif %}
+    </section>
+</main>
+</body>
+</html>

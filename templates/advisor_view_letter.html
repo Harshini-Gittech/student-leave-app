@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Leave Letter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div>Class Advisor: {{ user.name }} – Leave Application</div>
+    <nav>
+        <a href="{{ url_for('advisor_dashboard') }}" class="btn small">Back to Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn small outline">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h2>Leave Application Letter</h2>
+        <pre class="letter">
+From: {{ leave.student_name }}
+Class: {{ leave.student_class }}
+Roll No: {{ leave.student_roll }}
+Date: {{ letter_date }}
+
+To,
+The Class Advisor / HOD,
+_________________________
+(College/Department)
+
+Subject: Leave Application
+
+Respected Sir/Madam,
+
+I am writing to request leave from {{ from_date }} to {{ to_date }} due to {{ leave.reason }}.
+
+I kindly request you to grant me leave for the mentioned days.
+
+Thank you.
+
+Your obedient student,
+{{ leave.student_name }}
+Roll No: {{ leave.student_roll }}
+Class: {{ leave.student_class }}
+
+Current Status: {{ leave.status|capitalize }}
+        </pre>
+    </section>
+</main>
+</body>
+</html>
